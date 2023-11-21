@@ -1,3 +1,15 @@
-<p>
-  home-route works!
-</p>
+<ng-container *ngIf="pedidos$ | async as pedidos" >
+  <ng-container *ngIf="usuarios$ | async as usuarios" >
+    <h1 class="titulo">Total de Usuários:</h1>
+    <div class="flex">
+      <mat-icon class="icon" fontIcon="person"></mat-icon>
+      <div [countUp]=usuario_count$ [duration]="1000" class="display_numero" id="pedidos_value"></div>
+    </div>
+    <br>
+    <h1 class="titulo">Total de Pedidos:</h1>
+    <div class="flex">
+      <mat-icon class="icon" fontIcon="local_shipping"></mat-icon>
+      <div [countUp]=pedido_count$ [duration]="1000" class="display_numero" id="pedidos_value"></div>
+    </div>
+  </ng-container>
+</ng-container>

@@ -6,6 +6,7 @@ import { FormControl, NgModel } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { Observable } from 'rxjs/internal/Observable';
 export class UsuariosEditComponent implements OnInit {
   usuario$: Observable<Usuario> | undefined;
 
-  constructor(private dialogRef: MatDialogRef<UsuariosEditComponent>, private _usuariosSrv: UsuariosService, @Inject(MAT_DIALOG_DATA) public data: number) { }
+  constructor(private dialogRef: MatDialogRef<UsuariosEditComponent>, private _usuariosSrv: UsuariosService, private _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: number) { }
 
   ngOnInit(): void {
     const id = this.data
@@ -31,10 +32,18 @@ export class UsuariosEditComponent implements OnInit {
   edit_user(username : string, password : string): void {
     const id = this.data
     const newUser = new Usuario(username, password, id);
-
     this._usuariosSrv.edit_user(newUser).subscribe((data: Usuario | undefined) => {
       console.log(data);
       this.close(data);
+      this.openSnackBar("Usuario editado com sucesso!", "Fechar")
+    },
+    (error: any) => {
+      this.openSnackBar("Erro ao editar usuário!", "Fechar");
+      console.error(error);
     });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 }

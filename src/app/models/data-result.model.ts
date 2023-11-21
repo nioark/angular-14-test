@@ -1,5 +1,5 @@
-export class DataResult  {
+export class DataResult<T>  {
   message?:string
-  data?: any
+  data?: T
   error?: string
 }

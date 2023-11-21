@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Usuario } from '../../../usuarios/models/usuario.model';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pedidos-add',
@@ -17,7 +18,7 @@ export class PedidosAddComponent implements OnInit {
   usuarios$:Observable<Usuario[]> | undefined;
 
 
-  constructor(private dialogRef: MatDialogRef<PedidosAddComponent>, private _pedidosSrv: PedidosService,  private _usuariosSrv: UsuariosService, ) { }
+  constructor(private dialogRef: MatDialogRef<PedidosAddComponent>, private _pedidosSrv: PedidosService, private _snackBar: MatSnackBar,  private _usuariosSrv: UsuariosService, ) { }
 
   ngOnInit(): void {
     this.usuarios$ = this._usuariosSrv.fetch();
@@ -34,6 +35,15 @@ export class PedidosAddComponent implements OnInit {
     this._pedidosSrv.add_pedido(newPedido).subscribe((data: Pedido | undefined) => {
       console.log(data);
       this.close(data);
+      this.openSnackBar("Pedido adicionado com sucesso!", "Fechar");
+    },
+    (error: any) => {
+      this.openSnackBar("Erro ao editar pedido!", "Fechar");
+      console.error(error);
     });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 }

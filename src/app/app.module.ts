@@ -26,6 +26,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import { PedidosRouteComponent } from './routes/pedidos-route/pedidos-route.component';
 import { UsuariosRouteComponent } from './routes/usuarios-route/usuarios-route.component';
 import { HomeRouteComponent } from './routes/home-route/home-route.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { CountUpDirective } from './count-up.directive';
 
 
 
@@ -41,7 +43,8 @@ import { HomeRouteComponent } from './routes/home-route/home-route.component';
     PedidosAddComponent,
     PedidosEditComponent,
     PedidosRouteComponent,
-    HomeRouteComponent
+    HomeRouteComponent,
+    CountUpDirective
 
   ],
   imports: [
@@ -58,6 +61,7 @@ import { HomeRouteComponent } from './routes/home-route/home-route.component';
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
+    MatSnackBarModule,
     MatDialogModule // Add this line
   ],
   providers: [],

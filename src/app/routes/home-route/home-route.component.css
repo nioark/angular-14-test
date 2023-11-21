@@ -1,0 +1,22 @@
+.display_numero {
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+.titulo {
+  font-size: x-large;
+  font-weight: 400;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.icon {
+  margin-top: 5px;
+  margin-right: 25px;
+  transform: scale(1.4);
+}

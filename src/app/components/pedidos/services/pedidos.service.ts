@@ -1,25 +1,41 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, Subject, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Usuario } from '../../usuarios/models/usuario.model';
 import { Pedido } from '../models/pedido.model';
 
 import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
 
+
+class MySubject<T> extends Subject<T> {
+  constructor(){
+    super();
+  }
+
+  override next(value: T) {
+    super.next(value)
+    super.next(null as unknown as T)
+  }
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class PedidosService {
+  created = new MySubject<Pedido>()
+  updated = new MySubject<Pedido>()
+  removed = new MySubject<Pedido>()
+
   url:string
   constructor(private http: HttpClient) {
     this.url=environment.backend
   }
 
   fetch(): Observable<Pedido[]> {
-    return this.http.get<DataResult>(`${this.url}/pedidos`).pipe(
-      map(data => data.data as Pedido[] || []),
+    return this.http.get<DataResult<Pedido[]>>(`${this.url}/pedidos`).pipe(
+      map(data => data.data || []),
       tap({
         next: (x) => console.log(x)
       }),
@@ -27,8 +43,17 @@ export class PedidosService {
   }
 
   get(id: number): Observable<Pedido>{
-    return this.http.get<DataResult>(`${this.url}/pedidos/${id}`).pipe(
+    return this.http.get<DataResult<Pedido>>(`${this.url}/pedidos/${id}`).pipe(
       map(data => data.data as Pedido),
+      tap({
+        next: (x) => console.log(x)
+      }),
+    );
+  }
+
+  get_pedidos_from_user(userid:number) {
+    return this.http.get<DataResult<Pedido[]>>(`${this.url}/usuarios/${userid}/pedidos`).pipe(
+      map(data => data.data as Pedido[] || []),
       tap({
         next: (x) => console.log(x)
       }),
@@ -41,7 +66,12 @@ export class PedidosService {
       .append('quantidade', pedido.quantidade)
       .append('usuarioid', pedido.quantidade)
 
-    return this.http.post(`${this.url}/pedidos`, "", {params: params});
+    return this.http.post<DataResult<Pedido>>(`${this.url}/pedidos`, "", {params: params}).pipe(tap({
+      next:(data)=> {
+        if(data.data===undefined) return
+        this.removed.next(data.data)
+      }
+    }));
   }
 
   edit_pedido(pedido: Pedido): Observable<any> {
@@ -54,10 +84,20 @@ export class PedidosService {
     .append('quantidade', pedido.quantidade)
     .append('usuarioid', pedido.usuarioid)
 
-    return this.http.put(`${this.url}/pedidos/${pedido.id}`, "", {params: params});
+    return this.http.put<DataResult<Pedido>>(`${this.url}/pedidos/${pedido.id}`, "", {params: params}).pipe(tap({
+      next:(data)=> {
+        if(data.data===undefined) return
+        this.removed.next(data.data)
+      }
+    }));
   }
 
   remove(id : number): Observable<any>{
-    return this.http.delete(`${this.url}/pedidos/${id}`);
+    return this.http.delete<DataResult<Pedido>>(`${this.url}/pedidos/${id}`).pipe(tap({
+      next:(data)=> {
+        if(data.data===undefined) return
+        this.removed.next(data.data)
+      }
+    }));
   }
 }
