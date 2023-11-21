@@ -1,0 +1,21 @@
+
+<ng-container *ngIf="pedidos$ | async as pedidos" >
+  <button class="add_btn" (click)="create()" mat-flat-button color="primary">Adicionar Pedido</button>
+  <h1>Pedidos:</h1>
+ 
+  <mat-list>
+    <ng-container *ngFor="let pedido of pedidos" >
+        <mat-list-item>
+          <div class="user_name">
+            <p>{{ pedido.name }}</p>
+          </div>
+          <div class="user_actions">
+
+            <button (click)="edit(pedido.id)" mat-flat-button color="basic">Editar</button>
+            <button (click)="remove(pedido.id)" mat-flat-button color="warn">Remover</button>
+          </div>
+        </mat-list-item>
+    </ng-container>
+  </mat-list>
+
+</ng-container>

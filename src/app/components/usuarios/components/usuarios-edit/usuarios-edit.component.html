@@ -1,0 +1,14 @@
+<div class="add-form">
+  <ng-container *ngIf="usuario$ | async as usuario" >
+    <mat-form-field class="form-input" appearance="fill">
+      <mat-label>Username</mat-label>
+      <input #username type="text" value="{{usuario.name}}" matInput placeholder="John">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="form-input" appearance="fill">
+      <mat-label>Senha</mat-label>
+      <input #password type="password" value="{{usuario.password}}" matInput>
+    </mat-form-field>
+    <button class="btn-submit" (click)="edit_user(username.value, password.value)" mat-flat-button color="accent">Adicionar Usuario</button>
+  </ng-container>
+</div>

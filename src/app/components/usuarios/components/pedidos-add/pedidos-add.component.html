@@ -1,0 +1,19 @@
+<div class="add-form">
+
+    <mat-form-field class="form-input" appearance="fill">
+      <mat-label>Name</mat-label>
+      <input #name type="text" matInput placeholder="John">
+    </mat-form-field>
+    <br>
+    <mat-form-field class="form-input" appearance="fill">
+      <mat-label>Quantidade</mat-label>
+      <input #quantidade type="number" matInput>
+    </mat-form-field>
+    <br>
+    <mat-form-field class="form-input" appearance="fill">
+        <mat-label>Id do usuario</mat-label>
+        <input #usuarioid type="number" matInput>
+    </mat-form-field>
+    <br>
+    <button class="btn-submit" (click)="add_pedido(name.value, quantidade.valueAsNumber, usuarioid.valueAsNumber)" mat-flat-button color="accent">Adicionar Usuario</button>
+</div>

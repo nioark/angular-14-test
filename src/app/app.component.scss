@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    background-color: cornflowerblue !important;
+}
+
+.flex {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.usuarios_menu {
+    background-color: aliceblue;
+    width: 50%;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 10px
+}
+
+.pedidos_menu {
+    background-color: aliceblue;
+    width: 50%;
+    padding: 30px;
+    border-radius: 10px;
+    margin: 10px
+
+}
