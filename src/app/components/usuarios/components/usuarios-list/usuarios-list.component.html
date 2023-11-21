@@ -2,19 +2,35 @@
 <ng-container *ngIf="usuarios$ | async as usuarios" >
   <button class="add_btn" (click)="create()" mat-flat-button color="primary">Adicionar Usuario</button>
   <h1>Usuarios:</h1>
-  <mat-list>
-    <ng-container *ngFor="let usuario of usuarios" >
-        <mat-list-item>
-          <div class="user_name">
-            <p>{{ usuario.name }}</p>
-          </div>
-          <div class="user_actions">
-
-            <button (click)="edit(usuario.id)" mat-flat-button color="basic">Editar</button>
+  <table class="pure-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let usuario of usuarios" >
+        <tr>
+          <td>{{usuario.id}}</td>
+          <td>{{usuario.name}}</td>
+          <td>
+            <button (click)="view(usuario.id)" mat-flat-button color="accent">View</button>
+          </td>
+          <td>
+            <button (click)="edit(usuario.id)" mat-flat-button color="primary">Editar</button>
+          </td>
+          <td>
             <button (click)="remove(usuario.id)" mat-flat-button color="warn">Remover</button>
-          </div>
-        </mat-list-item>
-    </ng-container>
-  </mat-list>
+          </td>
+        </tr>
+      </ng-container>
+
+    </tbody>
+  </table>
+
 
 </ng-container>

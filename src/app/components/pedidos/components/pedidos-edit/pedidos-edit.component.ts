@@ -4,6 +4,9 @@ import { Pedido } from '../../models/pedido.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+import { FormControl } from '@angular/forms';
+import { Usuario } from '../../../usuarios/models/usuario.model';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 
 @Component({
   selector: 'app-pedidos-edit',
@@ -25,8 +28,9 @@ export class PedidosEditComponent implements OnInit {
 
   edit_pedido(name : string, quantidade : number, usuarioid : number): void {
     const id = this.data
+    console.log(usuarioid)
     const newPedido = new Pedido(name, usuarioid, quantidade, id);
-    
+
     this._pedidosSrv.edit_pedido(newPedido).subscribe((data: Pedido | undefined) => {
       console.log(data);
       this.close(data);

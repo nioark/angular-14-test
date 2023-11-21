@@ -1,0 +1,41 @@
+
+<ng-container *ngIf="pedidos$ | async as pedidos" >
+  <button class="add_btn" (click)="create()" mat-flat-button color="primary">Adicionar Pedido</button>
+  <h1>Pedidos:</h1>
+
+  <table class="pure-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>UsuarioId</th>
+            <th></th>
+            <th></th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let pedido of pedidos" >
+        <tr>
+          <td>{{pedido.id}}</td>
+          <td>{{pedido.name}}</td>
+          <td>{{pedido.quantidade}}</td>
+          <td>{{pedido.usuarioid}}</td>
+          <td>
+            <button (click)="edit(pedido.id)" mat-flat-button color="primary">Editar</button>
+          </td>
+          <td>
+            <button (click)="remove(pedido.id)" mat-flat-button color="warn">Remover</button>
+          </td>
+        </tr>
+      </ng-container>
+
+    </tbody>
+  </table>
+
+
+
+
+</ng-container>

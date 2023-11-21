@@ -4,19 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
 </head>
 <body>
-  
+
+
+  <mat-toolbar color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item href="/"><mat-icon fontIcon="home"></mat-icon>Home</a>
+      <a mat-menu-item href="/usuarios"><mat-icon fontIcon="person"></mat-icon>Usuarios</a>
+      <a mat-menu-item href="/pedidos"><mat-icon fontIcon="local_shipping"></mat-icon>Pedidos</a>
+    </mat-menu>
+
+    <span>Angular App</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-toolbar>
+
   <div class="flex">
-    <div class="usuarios_menu">
-      <app-usuarios-list></app-usuarios-list>
-    </div>
-    <div class="pedidos_menu">
-      <app-pedidos-list></app-pedidos-list>
+
+    <div class="menu">
+      <router-outlet></router-outlet>
     </div>
 
-  </div>  
-  
+  </div>
+
 
 </body>
 </html>

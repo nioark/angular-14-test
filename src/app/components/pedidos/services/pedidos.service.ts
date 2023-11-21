@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Usuario } from '../models/usuario.model';
+import { Usuario } from '../../usuarios/models/usuario.model';
 import { Pedido } from '../models/pedido.model';
 
 import { DataResult } from '../../../models/data-result.model';
@@ -39,7 +39,7 @@ export class PedidosService {
     const params = new HttpParams()
       .append('name', pedido.name)
       .append('quantidade', pedido.quantidade)
-      .append('user_id', pedido.quantidade)
+      .append('usuarioid', pedido.quantidade)
 
     return this.http.post(`${this.url}/pedidos`, "", {params: params});
   }
@@ -52,7 +52,7 @@ export class PedidosService {
     const params = new HttpParams()
     .append('name', pedido.name)
     .append('quantidade', pedido.quantidade)
-    .append('user_id', pedido.usuarioid)
+    .append('usuarioid', pedido.usuarioid)
 
     return this.http.put(`${this.url}/pedidos/${pedido.id}`, "", {params: params});
   }

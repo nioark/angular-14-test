@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UsuariosService } from '../../services/usuarios.service';
+import { UsuariosService } from '../../../usuarios/services/usuarios.service';
 import { Observable } from 'rxjs';
 import { Pedido } from '../../models/pedido.model';
 import { PedidosService } from '../../services/pedidos.service';
 import { PedidosAddComponent } from '../pedidos-add/pedidos-add.component';
 import { PedidosEditComponent } from '../pedidos-edit/pedidos-edit.component';
+import {MatTableModule} from '@angular/material/table';
 
 @Component({
   selector: 'app-pedidos-list',

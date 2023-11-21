@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Usuario } from '../models/usuario.model';
 import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
+import { Pedido } from '../../pedidos/models/pedido.model';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -26,6 +27,15 @@ export class UsuariosService {
   fetch(): Observable<Usuario[]> {
     return this.http.get<DataResult>(`${this.url}/usuarios`).pipe(
       map(data => data.data as Usuario[] || []),
+      tap({
+        next: (x) => console.log(x)
+      }),
+    );
+  }
+
+  getPedidos(id:number) {
+    return this.http.get<DataResult>(`${this.url}/usuarios/${id}/pedidos`).pipe(
+      map(data => data.data as Pedido[] || []),
       tap({
         next: (x) => console.log(x)
       }),
@@ -55,7 +65,7 @@ export class UsuariosService {
     }
 
     const params = new HttpParams()
-    .append('username', usuario.name)
+    .append('name', usuario.name)
     .append('password', usuario.password);
 
     return this.http.put(`${this.url}/usuarios/${usuario.id}`, "", {params: params});

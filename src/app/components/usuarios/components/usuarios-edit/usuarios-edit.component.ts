@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Usuario } from '../../models/usuario.model';
 import { UsuariosService } from '../../services/usuarios.service';
-import { NgModel } from '@angular/forms';
+import { FormControl, NgModel } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
+
 
 @Component({
   selector: 'app-usuarios-edit',
@@ -30,7 +31,7 @@ export class UsuariosEditComponent implements OnInit {
   edit_user(username : string, password : string): void {
     const id = this.data
     const newUser = new Usuario(username, password, id);
-    
+
     this._usuariosSrv.edit_user(newUser).subscribe((data: Usuario | undefined) => {
       console.log(data);
       this.close(data);

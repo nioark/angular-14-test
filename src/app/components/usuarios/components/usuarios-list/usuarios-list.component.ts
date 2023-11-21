@@ -5,6 +5,7 @@ import { UsuariosService } from '../../services/usuarios.service';
 import { UsuariosAddComponent } from '../usuarios-add/usuarios-add.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UsuariosEditComponent } from '../usuarios-edit/usuarios-edit.component';
+import { UsuarioViewComponent } from '../usuario-view/usuario-view.component';
 
 @Component({
   selector: 'app-usuarios-list',
@@ -45,6 +46,13 @@ export class UsuariosListComponent implements OnInit {
     this._usuariosSrv.remove(id as number).subscribe((data: Usuario | undefined) => {
       console.log(data);
     });
- }
+  }
+
+  view(id: number | undefined){
+    const dialogRef = this.dialog.open(UsuarioViewComponent, {
+      data: id
+    });;
+
+  }
 
 }

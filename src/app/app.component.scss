@@ -3,25 +3,19 @@ html, body {
     background-color: cornflowerblue !important;
 }
 
+.example-spacer {
+  flex: 1 1 auto;
+}
+
 .flex {
     display: flex;
     width: 100%;
-    height: 100%;
+    justify-content: center;
 }
 
-.usuarios_menu {
+.menu {
     background-color: aliceblue;
-    width: 50%;
     padding: 30px;
     border-radius: 10px;
-    margin: 10px
-}
-
-.pedidos_menu {
-    background-color: aliceblue;
-    width: 50%;
-    padding: 30px;
-    border-radius: 10px;
-    margin: 10px
-
+    margin: 10px;
 }

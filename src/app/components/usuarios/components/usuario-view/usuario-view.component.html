@@ -1,0 +1,25 @@
+<ng-container *ngIf="usuario$ | async as usuario">
+  <ng-container *ngIf="pedidos$ | async as pedidos">
+    <h1>Pedidos de {{usuario.name}}:</h1>
+    <table class="pure-table">
+      <thead>
+          <tr>
+              <th>#</th>
+              <th>Nome</th>
+              <th>Quantidade</th>
+          </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let pedido of pedidos" >
+          <tr>
+            <td>{{pedido.id}}</td>
+            <td>{{pedido.name}}</td>
+            <td>{{pedido.quantidade}}</td>
+          </tr>
+        </ng-container>
+
+      </tbody>
+    </table>
+  </ng-container>
+</ng-container>
+
