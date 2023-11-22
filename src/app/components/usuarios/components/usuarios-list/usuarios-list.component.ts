@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest, map, startWith , switchMap, withLatestFrom} from 'rxjs';
+import { Observable, combineLatest, map, merge, startWith , switchMap, withLatestFrom} from 'rxjs';
 import { Usuario } from '../../models/usuario.model';
 import { UsuariosService } from '../../services/usuarios.service';
 import { UsuariosAddComponent } from '../usuarios-add/usuarios-add.component';
@@ -23,40 +23,37 @@ export class UsuariosListComponent implements OnInit {
   constructor(public dialog: MatDialog,private _usuariosSrv:UsuariosService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-this.usuarios$ = this._usuariosSrv.fetch().pipe(
-  switchMap(
-    (usuarios) => combineLatest({
-      created:this._usuariosSrv.created.pipe(startWith(null)),
-      updated:this._usuariosSrv.updated.pipe(startWith(null)),
-      removed:this._usuariosSrv.removed.pipe(startWith(null))
-    }).pipe(map((data)=>{
-      console.log("Objeto: ", data)
-      if(data?.created?.id) {
-        usuarios.unshift(data.created)
-      }
+    this.usuarios$ = this._usuariosSrv.fetch().pipe(
+      switchMap((usuarios) => merge(
+        this._usuariosSrv.created.pipe(map((created) => ({ created }))),
+        this._usuariosSrv.updated.pipe(map((updated) => ({ updated }))),
+        this._usuariosSrv.removed.pipe(map((removed) => ({ removed })))
+      ).pipe(
+        startWith({}), // Necessário pra o usuarios$ ser inicializado
+        map((data) => {
+          const type = Object.keys(data)[0] as keyof typeof data;
+          const usuarioEvent = data[type] as Usuario;
 
-      if (data?.updated?.id) {
-        const index = usuarios.findIndex(usuario => usuario.id === data.updated?.id);
-        if (index !== -1)
-          usuarios[index] = data.updated;
-      }
+          switch (type) {
+            case 'created':
+              usuarios.unshift(usuarioEvent);
+              break;
+            case 'updated':
+              const index = usuarios.findIndex(usuario => usuario.id === usuarioEvent.id);
+              if (index !== -1)
+                usuarios[index] = usuarioEvent;
+              break;
+            case 'removed':
+              const index2 = usuarios.findIndex(usuario => usuario.id === usuarioEvent.id);
+              if (index2 !== -1)
+                usuarios.splice(index2, 1);
+              break;
+          }
 
-      if (data?.removed?.id) {
-        const index = usuarios.findIndex(usuario => usuario.id === data.removed?.id);
-        console.log("Removed: ",usuarios, index)
-        if (index !== -1)
-          usuarios.splice(index, 1);
-
-        console.log("Removed after: ",usuarios, index)
-
-      }
-
-      return usuarios
-    }))
-  )
-)
-
-
+          return usuarios;
+        })
+      ))
+    );
   }
 
   create() {

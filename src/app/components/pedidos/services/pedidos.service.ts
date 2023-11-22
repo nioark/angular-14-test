@@ -8,25 +8,15 @@ import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
 
 
-class MySubject<T> extends Subject<T> {
-  constructor(){
-    super();
-  }
-
-  override next(value: T) {
-    super.next(value)
-    super.next(null as unknown as T)
-  }
-}
-
-
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class PedidosService {
-  created = new MySubject<Pedido>()
-  updated = new MySubject<Pedido>()
-  removed = new MySubject<Pedido>()
+  created = new Subject<Pedido>()
+  updated = new Subject<Pedido>()
+  removed = new Subject<Pedido>()
 
   url:string
   constructor(private http: HttpClient) {
@@ -69,7 +59,7 @@ export class PedidosService {
     return this.http.post<DataResult<Pedido>>(`${this.url}/pedidos`, "", {params: params}).pipe(tap({
       next:(data)=> {
         if(data.data===undefined) return
-        this.removed.next(data.data)
+        this.created.next(data.data)
       }
     }));
   }
@@ -87,7 +77,7 @@ export class PedidosService {
     return this.http.put<DataResult<Pedido>>(`${this.url}/pedidos/${pedido.id}`, "", {params: params}).pipe(tap({
       next:(data)=> {
         if(data.data===undefined) return
-        this.removed.next(data.data)
+        this.updated.next(data.data)
       }
     }));
   }

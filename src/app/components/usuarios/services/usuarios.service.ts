@@ -7,16 +7,6 @@ import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
 import { Pedido } from '../../pedidos/models/pedido.model';
 
-class MySubject<T> extends Subject<T> {
-  constructor(){
-    super();
-  }
-
-  override next(value: T) {
-    super.next(value)
-    super.next(null as unknown as T)
-  }
-}
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -30,9 +20,9 @@ const headers = { 'Content-Type': 'application/json' };
   providedIn: 'root'
 })
 export class UsuariosService {
-  created = new MySubject<Usuario>() //.pipe(startWith(null));
-  updated = new MySubject<Usuario>()
-  removed = new MySubject<Usuario>()
+  created = new Subject<Usuario>() //.pipe(startWith(null));
+  updated = new Subject<Usuario>()
+  removed = new Subject<Usuario>()
 
   url:string
   constructor(private http: HttpClient) {

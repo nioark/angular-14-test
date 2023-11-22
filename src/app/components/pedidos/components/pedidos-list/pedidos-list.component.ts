@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UsuariosService } from '../../../usuarios/services/usuarios.service';
-import { Observable, combineLatest, map, startWith } from 'rxjs';
+import { Observable, combineLatest, map, merge, of, race, startWith, switchMap } from 'rxjs';
 import { Pedido } from '../../models/pedido.model';
 import { PedidosService } from '../../services/pedidos.service';
 import { PedidosAddComponent } from '../pedidos-add/pedidos-add.component';
 import { PedidosEditComponent } from '../pedidos-edit/pedidos-edit.component';
 import {MatTableModule} from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-pedidos-list',
@@ -21,29 +22,38 @@ export class PedidosListComponent implements OnInit {
   constructor(public dialog: MatDialog, private _pedidosSrv: PedidosService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    this.pedidos$ = combineLatest({
-      usuarios:this._pedidosSrv.fetch(),
-      created:this._pedidosSrv.created.asObservable().pipe(startWith(null)),
-      updated:this._pedidosSrv.updated.asObservable().pipe(startWith(null)),
-      removed:this._pedidosSrv.removed.asObservable().pipe(startWith(null))
-    }).pipe(map((data)=>{
-      if(data?.created?.id) data.usuarios.unshift(data.created)
-      
-      if (data?.updated?.id) {
-        const index = data.usuarios.findIndex(usuario => usuario.id === data.updated?.id);
-        if (index !== -1) 
-          data.usuarios[index] = data.updated;
-      }
 
-      if (data?.removed?.id) {
-        const index = data.usuarios.findIndex(usuario => usuario.id === data.removed?.id);
-        if (index !== -1) 
-          data.usuarios.splice(index, 1);
-      }
+    this.pedidos$ = this._pedidosSrv.fetch().pipe(
+      switchMap((pedidos) => merge(
+        this._pedidosSrv.created.pipe(map((created) => ({ created }))),
+        this._pedidosSrv.updated.pipe(map((updated) => ({ updated }))),
+        this._pedidosSrv.removed.pipe(map((removed) => ({ removed })))
+      ).pipe(
+        startWith({}), // Necessário pra o pedidos$ ser inicializado
+        map((data) => {
+          const type = Object.keys(data)[0] as keyof typeof data;
+          const pedidoEvent = data[type] as Pedido;
 
-      return data.usuarios
-    }))
-  
+          switch (type) {
+            case 'created':
+              pedidos.unshift(pedidoEvent);
+              break;
+            case 'updated':
+              const index = pedidos.findIndex(pedido => pedido.id === pedidoEvent.id);
+              if (index !== -1)
+                pedidos[index] = pedidoEvent;
+              break;
+            case 'removed':
+              const index2 = pedidos.findIndex(pedido => pedido.id === pedidoEvent.id);
+              if (index2 !== -1)
+                pedidos.splice(index2, 1);
+              break;
+          }
+
+          return pedidos;
+        })
+      ))
+    );
   }
 
   create() {
@@ -80,3 +90,36 @@ export class PedidosListComponent implements OnInit {
   }
 
 }
+
+
+    // this.pedidos$ = this._pedidosSrv.fetch().pipe(
+    //   switchMap(
+    //     (pedidos) => combineLatest({
+    //       created:this._pedidosSrv.created.pipe(startWith(null)),
+    //       updated:this._pedidosSrv.updated.pipe(startWith(null)),
+    //       removed:this._pedidosSrv.removed.pipe(startWith(null))
+    //     }).pipe(map((data)=>{
+    //       console.log("Objeto: ", pedidos, data)
+    //       if(data?.created?.id) {
+    //         pedidos.unshift(data.created)
+    //       }
+
+    //       if (data?.updated?.id) {
+    //         const index = pedidos.findIndex(pedido => pedido.id === data.updated?.id);
+    //         if (index !== -1)
+    //           pedidos[index] = data.updated;
+    //       }
+
+    //       if (data?.removed?.id) {
+    //         const index = pedidos.findIndex(pedido => pedido.id === data.removed?.id);
+    //         //console.log("Removed: ",pedidos, index)
+    //         if (index !== -1)
+    //           pedidos.splice(index, 1);
+
+    //         console.log("Removed after: ",pedidos, index)
+
+    //       }
+
+    //       return pedidos
+    //     })))
+    //   )
