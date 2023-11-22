@@ -25,7 +25,7 @@ username: any;
   add_user(username : string, password : string): void {
     const newUser = new Usuario(username, password);
     this._usuariosSrv.add_user(newUser).subscribe(
-      (data: Usuario | undefined) => {
+      (data: any) => {
         this.close(data);
         this.openSnackBar("Usuario adicionado com sucesso!", "Fechar");
       },

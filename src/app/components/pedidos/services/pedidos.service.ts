@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, map, tap } from 'rxjs';
+import { Observable, Subject, map, of, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Pedido } from '../models/pedido.model';
 
 import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
+import { ListenData } from 'src/app/models/listen-data.model';
 
 
 @Injectable({
@@ -14,9 +15,7 @@ import { throwError } from 'rxjs';
 
 
 export class PedidosService {
-  created = new Subject<Pedido>()
-  updated = new Subject<Pedido>()
-  removed = new Subject<Pedido>()
+  list: ListenData<Pedido>|undefined
 
   url:string
   constructor(private http: HttpClient) {
@@ -25,7 +24,11 @@ export class PedidosService {
 
   fetch(): Observable<Pedido[]> {
     return this.http.get<DataResult<Pedido[]>>(`${this.url}/pedidos`).pipe(
-      map(data => data.data || []),
+      map(data => data?.data?.length ? data.data : []),
+      tap({
+        next: data=> this.list = new ListenData<Pedido>(data)
+      }),
+      switchMap((data) => this.list  ? this.list?.data$ : of(data)),
       tap({
         next: (x) => console.log(x)
       }),
@@ -56,12 +59,12 @@ export class PedidosService {
       .append('quantidade', pedido.quantidade)
       .append('usuarioid', pedido.quantidade)
 
-    return this.http.post<DataResult<Pedido>>(`${this.url}/pedidos`, "", {params: params}).pipe(tap({
-      next:(data)=> {
-        if(data.data===undefined) return
-        this.created.next(data.data)
-      }
-    }));
+      return this.http.post<DataResult<Pedido>>(`${this.url}/pedidos`, "", {params: params}).pipe(tap({
+        next:(data)=> {
+          if(data.data===undefined) return
+          this.list?.add(data.data)
+        }
+      }))
   }
 
   edit_pedido(pedido: Pedido): Observable<any> {
@@ -77,7 +80,7 @@ export class PedidosService {
     return this.http.put<DataResult<Pedido>>(`${this.url}/pedidos/${pedido.id}`, "", {params: params}).pipe(tap({
       next:(data)=> {
         if(data.data===undefined) return
-        this.updated.next(data.data)
+        this.list?.edit(data.data)
       }
     }));
   }
@@ -85,8 +88,8 @@ export class PedidosService {
   remove(id : number): Observable<any>{
     return this.http.delete<DataResult<Pedido>>(`${this.url}/pedidos/${id}`).pipe(tap({
       next:(data)=> {
-        if(data.data===undefined) return
-        this.removed.next(data.data)
+        if(data.data?.id===undefined) return
+        this.list?.delete(data.data.id)
       }
     }));
   }

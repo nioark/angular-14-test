@@ -22,38 +22,7 @@ export class PedidosListComponent implements OnInit {
   constructor(public dialog: MatDialog, private _pedidosSrv: PedidosService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-
-    this.pedidos$ = this._pedidosSrv.fetch().pipe(
-      switchMap((pedidos) => merge(
-        this._pedidosSrv.created.pipe(map((created) => ({ created }))),
-        this._pedidosSrv.updated.pipe(map((updated) => ({ updated }))),
-        this._pedidosSrv.removed.pipe(map((removed) => ({ removed })))
-      ).pipe(
-        startWith({}), // Necessário pra o pedidos$ ser inicializado
-        map((data) => {
-          const type = Object.keys(data)[0] as keyof typeof data;
-          const pedidoEvent = data[type] as Pedido;
-
-          switch (type) {
-            case 'created':
-              pedidos.unshift(pedidoEvent);
-              break;
-            case 'updated':
-              const index = pedidos.findIndex(pedido => pedido.id === pedidoEvent.id);
-              if (index !== -1)
-                pedidos[index] = pedidoEvent;
-              break;
-            case 'removed':
-              const index2 = pedidos.findIndex(pedido => pedido.id === pedidoEvent.id);
-              if (index2 !== -1)
-                pedidos.splice(index2, 1);
-              break;
-          }
-
-          return pedidos;
-        })
-      ))
-    );
+    this.pedidos$ = this._pedidosSrv.fetch()
   }
 
   create() {

@@ -33,7 +33,6 @@ export class UsuariosEditComponent implements OnInit {
     const id = this.data
     const newUser = new Usuario(username, password, id);
     this._usuariosSrv.edit_user(newUser).subscribe((data: Usuario | undefined) => {
-      console.log(data);
       this.close(data);
       this.openSnackBar("Usuario editado com sucesso!", "Fechar")
     },
