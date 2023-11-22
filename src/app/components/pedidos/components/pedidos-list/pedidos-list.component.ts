@@ -90,36 +90,3 @@ export class PedidosListComponent implements OnInit {
   }
 
 }
-
-
-    // this.pedidos$ = this._pedidosSrv.fetch().pipe(
-    //   switchMap(
-    //     (pedidos) => combineLatest({
-    //       created:this._pedidosSrv.created.pipe(startWith(null)),
-    //       updated:this._pedidosSrv.updated.pipe(startWith(null)),
-    //       removed:this._pedidosSrv.removed.pipe(startWith(null))
-    //     }).pipe(map((data)=>{
-    //       console.log("Objeto: ", pedidos, data)
-    //       if(data?.created?.id) {
-    //         pedidos.unshift(data.created)
-    //       }
-
-    //       if (data?.updated?.id) {
-    //         const index = pedidos.findIndex(pedido => pedido.id === data.updated?.id);
-    //         if (index !== -1)
-    //           pedidos[index] = data.updated;
-    //       }
-
-    //       if (data?.removed?.id) {
-    //         const index = pedidos.findIndex(pedido => pedido.id === data.removed?.id);
-    //         //console.log("Removed: ",pedidos, index)
-    //         if (index !== -1)
-    //           pedidos.splice(index, 1);
-
-    //         console.log("Removed after: ",pedidos, index)
-
-    //       }
-
-    //       return pedidos
-    //     })))
-    //   )
