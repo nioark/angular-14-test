@@ -28,6 +28,7 @@ import { UsuariosRouteComponent } from './routes/usuarios-route/usuarios-route.c
 import { HomeRouteComponent } from './routes/home-route/home-route.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { CountUpDirective } from './count-up.directive';
+import { GraphQLModule } from './graphql.module';
 
 
 
@@ -62,7 +63,8 @@ import { CountUpDirective } from './count-up.directive';
     MatIconModule,
     MatMenuModule,
     MatSnackBarModule,
-    MatDialogModule // Add this line
+    MatDialogModule,
+    GraphQLModule // Add this line
   ],
   providers: [],
   bootstrap: [AppComponent]
