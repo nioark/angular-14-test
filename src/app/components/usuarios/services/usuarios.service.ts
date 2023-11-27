@@ -6,7 +6,7 @@ import { Usuario } from '../models/usuario.model';
 import { DataResult } from '../../../models/data-result.model';
 import { throwError } from 'rxjs';
 import { ListenData } from 'src/app/models/listen-data.model';
-
+import { Apollo, gql } from 'apollo-angular';
 
 
 const httpOptions = {
@@ -24,11 +24,27 @@ export class UsuariosService {
   list: ListenData<Usuario>|undefined
 
   url:string
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private apollo: Apollo) {
     this.url=environment.backend
   }
 
   fetch(): Observable<Usuario[]> {
+    let x = this.apollo.watchQuery({
+      query: gql`query{
+          usuarios{
+            name
+            password
+            id
+          }
+        }
+      `,}).valueChanges.subscribe((result: any) => {
+      let data = result.data;
+      let loading = result.loading;
+      let error = result.error;
+
+      console.log(data, loading, error)
+    });
+
     return this.http.get<DataResult<Usuario[]>>(`${this.url}/usuarios`).pipe(
       map(data => data?.data?.length ? data.data : []),
       tap({
